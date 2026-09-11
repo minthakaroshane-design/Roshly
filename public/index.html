@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Roshly — a simple, fast and modern downloader for supported public social media content."
+    >
+
+    <meta name="theme-color" content="#00c8e8">
+
+    <title>Roshly — Simple & Fast Downloads</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ========================================
+     BACKGROUND
+======================================== -->
+
+<div class="background-effects" aria-hidden="true">
+
+    <div class="aurora aurora-one"></div>
+    <div class="aurora aurora-two"></div>
+    <div class="aurora aurora-three"></div>
+
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+    <div class="glow glow-three"></div>
+
+    <div class="light-orb orb-one"></div>
+    <div class="light-orb orb-two"></div>
+    <div class="light-orb orb-three"></div>
+    <div class="light-orb orb-four"></div>
+    <div class="light-orb orb-five"></div>
+
+    <div class="light-streak streak-one"></div>
+    <div class="light-streak streak-two"></div>
+    <div class="light-streak streak-three"></div>
+
+    <div class="spark spark-one">✦</div>
+    <div class="spark spark-two">✦</div>
+    <div class="spark spark-three">✦</div>
+    <div class="spark spark-four">✦</div>
+
+    <div class="particle particle-one"></div>
+    <div class="particle particle-two"></div>
+    <div class="particle particle-three"></div>
+    <div class="particle particle-four"></div>
+    <div class="particle particle-five"></div>
+    <div class="particle particle-six"></div>
+    <div class="particle particle-seven"></div>
+    <div class="particle particle-eight"></div>
+
+    <div class="grid-overlay"></div>
+
+</div>
+
+
+<!-- ========================================
+     NAVBAR
+======================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="#" class="logo">
+
+            <span class="logo-icon">
+                ✦
+            </span>
+
+            <span>Roshly</span>
+
+        </a>
+
+
+        <div class="nav-right">
+
+            <div class="nav-status">
+                <span class="status-pulse"></span>
+                Online
+            </div>
+
+            <button
+                id="themeBtn"
+                class="theme-btn"
+                type="button"
+                aria-label="Toggle theme"
+            >
+                ☼
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<!-- ========================================
+     HERO
+======================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="badge reveal">
+
+            <span class="badge-dot"></span>
+
+            Simple & fast free downloader
+
+            <span class="badge-arrow">
+                ✦
+            </span>
+
+        </div>
+
+
+        <h1 class="reveal">
+
+            Download content.
+
+            <span>
+                Simple and fast.
+            </span>
+
+        </h1>
+
+
+        <p class="hero-text reveal">
+
+            Paste a link, choose your quality,
+            and let Roshly handle the rest.
+
+        </p>
+
+
+        <div class="hero-mini-stats reveal">
+
+            <div class="mini-stat">
+
+                <span class="mini-stat-icon">
+                    ⚡
+                </span>
+
+                Fast processing
+
+            </div>
+
+            <div class="mini-stat">
+
+                <span class="mini-stat-icon">
+                    ◈
+                </span>
+
+                Multiple platforms
+
+            </div>
+
+            <div class="mini-stat">
+
+                <span class="mini-stat-icon">
+                    ✓
+                </span>
+
+                Simple to use
+
+            </div>
+
+        </div>
+
+
+<!-- ========================================
+     DOWNLOAD CARD
+======================================== -->
+
+        <div class="download-card reveal">
+
+            <div class="card-glow"></div>
+
+
+            <div class="download-card-header">
+
+                <div>
+
+                    <div class="download-card-title">
+                        Download a link
+                    </div>
+
+                    <div class="download-card-subtitle">
+                        Paste a supported public video or media URL
+                    </div>
+
+                </div>
+
+
+                <div class="secure-badge">
+
+                    <span class="secure-dot"></span>
+
+                    Fast & secure
+
+                </div>
+
+            </div>
+
+
+            <!-- URL INPUT -->
+
+            <div class="url-input-box">
+
+                <div class="url-icon">
+                    🔗
+                </div>
+
+                <input
+                    type="url"
+                    id="urlInput"
+                    placeholder="Paste your link here..."
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+
+                <button
+                    id="pasteBtn"
+                    class="paste-btn"
+                    type="button"
+                >
+                    Paste
+                </button>
+
+                <button
+                    id="clearBtn"
+                    class="clear-btn"
+                    type="button"
+                    aria-label="Clear URL"
+                    style="display:none;"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- MAIN BUTTON -->
+
+            <button
+                id="downloadBtn"
+                class="download-btn"
+                type="button"
+            >
+
+                <span class="button-content">
+                    <span class="button-main-text">
+                        Continue
+                    </span>
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+                </span>
+
+                <span class="button-shine"></span>
+
+            </button>
+
+
+            <!-- STATUS -->
+
+            <p
+                id="statusMessage"
+                class="status-message"
+                aria-live="polite"
+            ></p>
+
+
+            <!-- ========================================
+                 VIDEO PREVIEW
+            ======================================== -->
+
+            <div
+                id="videoPreview"
+                class="video-preview"
+            >
+
+                <div class="video-preview-inner">
+
+                    <div class="thumbnail-wrapper">
+
+                        <img
+                            id="videoThumbnail"
+                            class="video-thumbnail"
+                            src=""
+                            alt="Video thumbnail"
+                        >
+
+                        <div class="thumbnail-play">
+                            ▶
+                        </div>
+
+                    </div>
+
+
+                    <div class="video-info">
+
+                        <div class="preview-label">
+                            CONTENT FOUND
+                        </div>
+
+                        <h3
+                            id="videoTitle"
+                            class="video-title"
+                        >
+                            Video title
+                        </h3>
+
+                        <p
+                            id="videoDuration"
+                            class="video-duration"
+                        >
+                            Duration: --
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================
+                 QUALITY
+            ======================================== -->
+
+            <div
+                id="qualityBox"
+                class="quality-box"
+                style="display:none;"
+            >
+
+                <div class="quality-header">
+
+                    <div>
+
+                        <div class="quality-title">
+                            Choose quality
+                        </div>
+
+                        <div class="quality-subtitle">
+                            Select the format you want
+                        </div>
+
+                    </div>
+
+                    <div class="quality-icon">
+                        HD
+                    </div>
+
+                </div>
+
+
+                <select id="qualitySelect">
+
+                    <option value="">
+                        Select quality
+                    </option>
+
+                </select>
+
+
+                <button
+                    id="startDownloadBtn"
+                    class="download-btn quality-download"
+                    type="button"
+                >
+
+                    <span class="button-content">
+
+                        <span class="button-main-text">
+                            Download
+                        </span>
+
+                        <span class="button-arrow">
+                            ↓
+                        </span>
+
+                    </span>
+
+                    <span class="button-shine"></span>
+
+                </button>
+
+            </div>
+
+
+            <!-- ========================================
+                 PROGRESS
+            ======================================== -->
+
+            <div
+                id="progressContainer"
+                class="progress-container"
+            >
+
+                <div class="progress-top">
+
+                    <div>
+
+                        <div
+                            id="progressStatus"
+                            class="progress-status"
+                        >
+                            Starting download...
+                        </div>
+
+                        <div class="progress-subtitle">
+                            Roshly is processing your file
+                        </div>
+
+                    </div>
+
+                    <strong
+                        id="progressPercent"
+                        class="progress-percent"
+                    >
+                        0%
+                    </strong>
+
+                </div>
+
+
+                <div class="progress-bar-bg">
+
+                    <div
+                        id="progressBar"
+                        class="progress-bar"
+                    ></div>
+
+                </div>
+
+
+                <div class="progress-details">
+
+                    <span id="progressSpeed">
+                        Preparing...
+                    </span>
+
+                    <span id="progressEta">
+                        ETA --
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="download-note">
+
+                <span>✦</span>
+
+                Roshly works with supported public content.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     PLATFORM STRIP
+======================================== -->
+
+<section class="platforms-section">
+
+    <div class="section-container">
+
+        <p class="section-label">
+            WORKS WITH POPULAR PLATFORMS
+        </p>
+
+
+        <div class="platform-chips">
+
+            <div class="platform-chip">
+                <span>♪</span>
+                TikTok
+            </div>
+
+            <div class="platform-chip">
+                <span>◎</span>
+                Instagram
+            </div>
+
+            <div class="platform-chip">
+                <span>▶</span>
+                YouTube
+            </div>
+
+            <div class="platform-chip">
+                <span>f</span>
+                Facebook
+            </div>
+
+            <div class="platform-chip">
+                <span>𝕏</span>
+                X
+            </div>
+
+            <div class="platform-chip">
+                <span>●</span>
+                Reddit
+            </div>
+
+            <div class="platform-chip">
+                <span>◆</span>
+                Pinterest
+            </div>
+
+            <div class="platform-chip">
+                <span>◉</span>
+                Snapchat
+            </div>
+
+            <div class="platform-chip">
+                <span>◎</span>
+                Threads
+            </div>
+
+            <div class="platform-chip">
+                <span>in</span>
+                LinkedIn
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     FEATURES
+======================================== -->
+
+<section class="features-section">
+
+    <div class="section-container">
+
+        <div class="section-heading reveal">
+
+            <p class="section-label">
+                WHY ROSHLY
+            </p>
+
+            <h2>
+                Built to make downloading feel effortless.
+            </h2>
+
+            <p>
+                No complicated setup. No confusing interfaces.
+                Just paste your link and get started.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <div class="feature-card reveal">
+
+                <div class="feature-number">
+                    01
+                </div>
+
+                <div class="feature-icon">
+                    ⚡
+                </div>
+
+                <h3>
+                    Fast processing
+                </h3>
+
+                <p>
+                    Roshly keeps the process simple and gets your
+                    supported content ready without unnecessary steps.
+                </p>
+
+                <div class="feature-line"></div>
+
+            </div>
+
+
+            <div class="feature-card reveal">
+
+                <div class="feature-number">
+                    02
+                </div>
+
+                <div class="feature-icon">
+                    ◈
+                </div>
+
+                <h3>
+                    Multiple platforms
+                </h3>
+
+                <p>
+                    One clean interface for supported content from
+                    popular social platforms.
+                </p>
+
+                <div class="feature-line"></div>
+
+            </div>
+
+
+            <div class="feature-card reveal">
+
+                <div class="feature-number">
+                    03
+                </div>
+
+                <div class="feature-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    Simple experience
+                </h3>
+
+                <p>
+                    A focused interface designed around one thing:
+                    making downloads easy.
+                </p>
+
+                <div class="feature-line"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     SECURITY / TRUST
+======================================== -->
+
+<section class="trust-section">
+
+    <div class="section-container">
+
+        <div class="trust-card reveal">
+
+            <div class="trust-content">
+
+                <div class="trust-icon">
+                    ◈
+                </div>
+
+                <div>
+
+                    <p class="section-label trust-label">
+                        BUILT WITH CARE
+                    </p>
+
+                    <h2>
+                        Clean. Fast. Focused.
+                    </h2>
+
+                    <p>
+                        Roshly is designed to keep the download
+                        experience straightforward while protecting
+                        the application with sensible security controls.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="trust-items">
+
+                <div class="trust-item">
+
+                    <span>✓</span>
+                    Protected API
+
+                </div>
+
+                <div class="trust-item">
+
+                    <span>✓</span>
+                    Rate limited
+
+                </div>
+
+                <div class="trust-item">
+
+                    <span>✓</span>
+                    Temporary processing
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     HOW IT WORKS
+======================================== -->
+
+<section class="how-section">
+
+    <div class="section-container">
+
+        <div class="section-heading centered reveal">
+
+            <p class="section-label">
+                HOW IT WORKS
+            </p>
+
+            <h2>
+                Three simple steps.
+            </h2>
+
+            <p>
+                From link to download in a few simple steps.
+            </p>
+
+        </div>
+
+
+        <div class="steps">
+
+            <div class="step reveal">
+
+                <div class="step-top">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <div class="step-icon">
+                        🔗
+                    </div>
+
+                </div>
+
+                <h3>
+                    Paste your link
+                </h3>
+
+                <p>
+                    Copy a supported public content URL
+                    and paste it into Roshly.
+                </p>
+
+            </div>
+
+
+            <div class="step reveal">
+
+                <div class="step-top">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <div class="step-icon">
+                        ◈
+                    </div>
+
+                </div>
+
+                <h3>
+                    Choose your quality
+                </h3>
+
+                <p>
+                    Select one of the available video
+                    or audio formats.
+                </p>
+
+            </div>
+
+
+            <div class="step reveal">
+
+                <div class="step-top">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <div class="step-icon">
+                        ↓
+                    </div>
+
+                </div>
+
+                <h3>
+                    Download
+                </h3>
+
+                <p>
+                    Start your download and save the
+                    processed file to your device.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     FINAL CTA
+======================================== -->
+
+<section class="final-cta">
+
+    <div class="cta-glow"></div>
+
+    <div class="section-container">
+
+        <div class="cta-card reveal">
+
+            <div class="cta-symbol">
+                ✦
+            </div>
+
+            <h2>
+                Your link. Your download.
+            </h2>
+
+            <p>
+                Keep it simple with Roshly.
+            </p>
+
+            <a href="#" class="cta-button">
+                Start downloading
+                <span>↑</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<!-- ========================================
+     FOOTER
+======================================== -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-top">
+
+            <div class="footer-brand">
+
+                <div class="footer-logo">
+
+                    <span class="logo-icon">
+                        ✦
+                    </span>
+
+                    Roshly
+
+                </div>
+
+                <p>
+                    Simple tools. Done fast.
+                </p>
+
+            </div>
+
+
+            <div class="footer-badge">
+
+                <span class="status-pulse"></span>
+
+                System operational
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Roshly. All rights reserved.
+            </p>
+
+            <p>
+                Built for a simpler web.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
