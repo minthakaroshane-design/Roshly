@@ -15,7 +15,7 @@ const PORT = 3000;
 // CONFIGURATION
 // =========================================================
 
-const PYTHON = "C:\\Python314\\python.exe";
+const PYTHON = "python3";
 
 const downloadsFolder = path.join(__dirname, "../downloads");
 
