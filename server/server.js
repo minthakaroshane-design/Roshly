@@ -63,19 +63,15 @@ app.use(
 // CORS
 // =========================================================
 
-// During development Roshly is served from the same
-// localhost server. These are allowed for development.
-
 const allowedOrigins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://roshly-production.up.railway.app"
 ];
+
 app.use(
     cors({
         origin: function (origin, callback) {
-            // Allow requests with no Origin header
-            // such as direct browser/server requests.
             if (!origin) {
                 return callback(null, true);
             }
@@ -118,9 +114,6 @@ const apiLimiter = rateLimit({
     }
 });
 
-// Slightly more restrictive limiter for video information.
-// Getting information also launches yt-dlp.
-
 const infoLimiter = rateLimit({
     windowMs: 60 * 1000,
     max: 10,
@@ -131,8 +124,6 @@ const infoLimiter = rateLimit({
         error: "Too many information requests. Please wait a minute and try again."
     }
 });
-
-// Progress/file requests are cheap, so allow more.
 
 const readLimiter = rateLimit({
     windowMs: 60 * 1000,
@@ -190,6 +181,98 @@ function isValidUrl(value) {
 }
 
 // =========================================================
+// PLATFORM DETECTION
+// =========================================================
+
+function getPlatformFromUrl(value) {
+    try {
+        const hostname =
+            new URL(value)
+                .hostname
+                .toLowerCase()
+                .replace(/^www\./, "");
+
+        if (
+            hostname === "youtube.com" ||
+            hostname === "youtu.be" ||
+            hostname.endsWith(".youtube.com")
+        ) {
+            return "youtube";
+        }
+
+        if (
+            hostname === "instagram.com" ||
+            hostname.endsWith(".instagram.com")
+        ) {
+            return "instagram";
+        }
+
+        if (
+            hostname === "facebook.com" ||
+            hostname === "fb.watch" ||
+            hostname.endsWith(".facebook.com")
+        ) {
+            return "facebook";
+        }
+
+        if (
+            hostname === "tiktok.com" ||
+            hostname.endsWith(".tiktok.com")
+        ) {
+            return "tiktok";
+        }
+
+        if (
+            hostname === "x.com" ||
+            hostname === "twitter.com" ||
+            hostname.endsWith(".x.com") ||
+            hostname.endsWith(".twitter.com")
+        ) {
+            return "twitter";
+        }
+
+        if (
+            hostname === "reddit.com" ||
+            hostname.endsWith(".reddit.com")
+        ) {
+            return "reddit";
+        }
+
+        if (
+            hostname === "pinterest.com" ||
+            hostname.endsWith(".pinterest.com")
+        ) {
+            return "pinterest";
+        }
+
+        if (
+            hostname === "snapchat.com" ||
+            hostname.endsWith(".snapchat.com")
+        ) {
+            return "snapchat";
+        }
+
+        if (
+            hostname === "linkedin.com" ||
+            hostname.endsWith(".linkedin.com")
+        ) {
+            return "linkedin";
+        }
+
+        if (
+            hostname === "threads.net" ||
+            hostname.endsWith(".threads.net")
+        ) {
+            return "threads";
+        }
+
+        return "unknown";
+    } catch {
+        return "unknown";
+    }
+}
+
+// =========================================================
 // FORMAT ID VALIDATION
 // =========================================================
 
@@ -202,8 +285,6 @@ function isValidFormatId(value) {
         return false;
     }
 
-    // yt-dlp format IDs normally use simple characters.
-    // Reject shell-like or unexpected characters.
     return /^[A-Za-z0-9._-]+$/.test(value);
 }
 
@@ -613,6 +694,10 @@ app.post(
             "ROSHLY INFO REQUEST"
         );
         console.log(
+            "PLATFORM:",
+            getPlatformFromUrl(url)
+        );
+        console.log(
             "===================================="
         );
 
@@ -713,48 +798,97 @@ app.post(
                 formats
             });
         } catch (error) {
-    console.error(
-        "ROSHLY INFO ERROR:",
-        error.message
-    );
+            console.error(
+                "ROSHLY INFO ERROR:",
+                error.message
+            );
 
-    const errorText = String(
-        error.message || ""
-    ).toLowerCase();
+            const errorText =
+                String(
+                    error.message || ""
+                ).toLowerCase();
 
-    let message =
-        "Could not retrieve this media.";
+            const platform =
+                getPlatformFromUrl(url);
 
-    if (
-        errorText.includes("there is no video in this post")
-    ) {
-        message =
-            "This Instagram post does not contain a downloadable video.";
-    } else if (
-        errorText.includes("login") ||
-        errorText.includes("authentication") ||
-        errorText.includes("logged in")
-    ) {
-        message =
-            "Instagram requires login to access this post.";
-    } else if (
-        errorText.includes("private")
-    ) {
-        message =
-            "This Instagram post is private and cannot be accessed.";
-    } else if (
-        errorText.includes("rate") ||
-        errorText.includes("429")
-    ) {
-        message =
-            "Instagram is temporarily limiting requests. Please try again later.";
-    }
+            let message =
+                "Could not retrieve this media.";
 
-    res.status(400).json({
-        success: false,
-        message
-    });
-}
+            // Instagram-specific errors
+            if (
+                platform === "instagram" &&
+                errorText.includes(
+                    "there is no video in this post"
+                )
+            ) {
+                message =
+                    "This Instagram post does not contain a downloadable video.";
+            } else if (
+                platform === "instagram" &&
+                (
+                    errorText.includes("login") ||
+                    errorText.includes("authentication") ||
+                    errorText.includes("logged in") ||
+                    errorText.includes("sign in")
+                )
+            ) {
+                message =
+                    "Instagram requires login to access this post.";
+            } else if (
+                platform === "instagram" &&
+                errorText.includes("private")
+            ) {
+                message =
+                    "This Instagram post is private and cannot be accessed.";
+            }
+
+            // YouTube-specific errors
+            else if (
+                platform === "youtube" &&
+                (
+                    errorText.includes("sign in to confirm") ||
+                    errorText.includes("not a bot") ||
+                    errorText.includes("use --cookies") ||
+                    errorText.includes("authentication")
+                )
+            ) {
+                message =
+                    "YouTube requires additional verification to access this video.";
+            }
+
+            // Rate limiting
+            else if (
+                errorText.includes("rate") ||
+                errorText.includes("429")
+            ) {
+                message =
+                    "The platform is temporarily limiting requests. Please try again later.";
+            }
+
+            // Generic authentication error
+            else if (
+                errorText.includes("login") ||
+                errorText.includes("authentication") ||
+                errorText.includes("logged in") ||
+                errorText.includes("sign in")
+            ) {
+                message =
+                    "This media requires authentication to access.";
+            }
+
+            // Private content
+            else if (
+                errorText.includes("private")
+            ) {
+                message =
+                    "This media is private and cannot be accessed.";
+            }
+
+            res.status(400).json({
+                success: false,
+                message
+            });
+        }
     }
 );
 
@@ -771,7 +905,7 @@ app.post(
             formatId
         } = req.body || {};
 
-        // Type validation FIRST
+        // Type validation
         if (
             typeof url !==
                 "string" ||
@@ -967,7 +1101,6 @@ app.post(
                     `${title}-${jobId}.%(ext)s`
                 );
 
-            // Final path safety check
             if (
                 !isSafeDownloadPath(
                     outputTemplate
@@ -1010,6 +1143,10 @@ app.post(
             console.log(
                 "FORMAT:",
                 formatSelector
+            );
+            console.log(
+                "PLATFORM:",
+                getPlatformFromUrl(url)
             );
             console.log(
                 "===================================="
@@ -1174,7 +1311,6 @@ app.post(
                         code
                     );
 
-                    // Download failed
                     if (
                         code !== 0
                     ) {
@@ -1441,7 +1577,6 @@ app.get(
         const jobId =
             req.params.jobId;
 
-        // Validate UUID
         if (
             !/^[0-9a-f-]{36}$/i.test(
                 jobId
@@ -1498,7 +1633,6 @@ app.get(
         const jobId =
             req.params.jobId;
 
-        // Validate UUID
         if (
             !/^[0-9a-f-]{36}$/i.test(
                 jobId
@@ -1535,7 +1669,6 @@ app.get(
                 job.file
             );
 
-        // Prevent path traversal
         if (
             !isSafeDownloadPath(
                 filePath
@@ -1568,20 +1701,25 @@ app.get(
         );
     }
 );
+
 // =========================================================
 // SITEMAP
 // =========================================================
 
-app.get("/sitemap.xml", (req, res) => {
-    res.type("application/xml");
+app.get(
+    "/sitemap.xml",
+    (req, res) => {
+        res.type("application/xml");
 
-    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+        res.send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://roshly-production.up.railway.app/</loc>
     </url>
 </urlset>`);
-});
+    }
+);
+
 // =========================================================
 // FRONTEND
 // =========================================================
